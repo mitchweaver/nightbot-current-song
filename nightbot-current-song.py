@@ -30,12 +30,14 @@ def get_song(channel_id):
     r = requests.get("https://api.nightbot.tv/1/song_requests/queue",
                      headers={"Nightbot-Channel":channel_id})
     try:
-        musicName = (r.json()['_currentSong']['track']['title'])
+        song_title = (r.json()['_currentSong']['track']['title'])
+        song_artist = (r.json()['_currentSong']['track']['artist'])
         f = open(file, 'r', encoding='utf-8')
-        if (f.read()) != musicName:
+        if (f.read()) != song_title:
             f = open(file, 'w', encoding='utf-8')
-            print(f"Now playing: {musicName}")
-            f.write(musicName)
+            print(f"Now playing: {song_artist} - {song_title}")
+            # f.write(song_artist + " - " + song_title)
+            f.write(song_title)
             f.close()
     except TypeError:
         print('Nothing playing...')
@@ -43,7 +45,6 @@ def get_song(channel_id):
         f = open(file, 'w', encoding='utf-8')
         f.write("")
         f.close()
-        time.sleep(10)
 
 def main():
     channel_id = get_channel_id()
