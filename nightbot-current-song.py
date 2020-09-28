@@ -39,13 +39,18 @@ def get_song(channel_id):
             f.close()
     except TypeError:
         print('Nothing playing...')
+        # blank the file when nothing is playing
+        f = open(file, 'w', encoding='utf-8')
+        f.write("")
+        f.close()
+        time.sleep(10)
 
 def main():
     channel_id = get_channel_id()
 
     while True:
         get_song(channel_id)
-        time.sleep(10)
+        time.sleep(5)
 
 if __name__ == "__main__":
     main()
