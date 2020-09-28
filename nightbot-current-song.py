@@ -6,15 +6,15 @@ import json
 import requests
 
 file = '/tmp/nightbot-current-song.txt'
-f = open(file, 'w', encoding='utf-8') #CREATES A MUSIC.TXT AND IF ALREADY EXISTS REWRITES HIM
+f = open(file, 'w', encoding='utf-8')
 
 while True:
     try:
-        channelName = input('Channel name:')
+        channelName = input('Channel name: ')
         channel_url = f'https://api.nightbot.tv/1/channels/t/{channelName}'
         channel_load = urlopen(channel_url)
-        jsonList = json.load(channel_load) #LOADS THE SITE'S JSON
-        channel_id = jsonList['channel']['_id'] #SEARCHS FOR THE CHANNEL'S ID
+        jsonList = json.load(channel_load)
+        channel_id = jsonList['channel']['_id']
         print(f"Channel's id: {channel_id}")
         break
     except OSError:
