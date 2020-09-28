@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import time
+import sys
 from urllib.request import urlopen
 import json
 import requests
@@ -8,20 +9,24 @@ import requests
 file = '/tmp/nightbot-current-song.txt'
 f = open(file, 'w', encoding='utf-8')
 
-while True:
+def get_channel_id():
     try:
-        channelName = input('Channel name: ')
-        channel_url = f'https://api.nightbot.tv/1/channels/t/{channelName}'
-        channel_load = urlopen(channel_url)
-        jsonList = json.load(channel_load)
-        channel_id = jsonList['channel']['_id']
-        print(f"Channel's id: {channel_id}")
-        break
-    except OSError:
-        print('Channel not found, try again')
-        time.sleep(3)
+        name = sys.argv[1]
+    except IndexError:
+        name = input('Channel name: ')
 
-def get_song():
+    while True:
+        try:
+            channel_url = f'https://api.nightbot.tv/1/channels/t/{name}'
+            channel_load = urlopen(channel_url)
+            jsonList = json.load(channel_load)
+            channel_id = jsonList['channel']['_id']
+            return channel_id
+        except OSError:
+            print('Channel not found, try again')
+            time.sleep(3)
+
+def get_song(channel_id):
     r = requests.get("https://api.nightbot.tv/1/song_requests/queue",
                      headers={"Nightbot-Channel":channel_id})
     try:
@@ -35,6 +40,12 @@ def get_song():
     except TypeError:
         print('Nothing playing...')
 
-while True:
-    get_song()
-    time.sleep(10)
+def main():
+    channel_id = get_channel_id()
+
+    while True:
+        get_song(channel_id)
+        time.sleep(10)
+
+if __name__ == "__main__":
+    main()
